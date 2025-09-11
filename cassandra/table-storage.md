@@ -3,7 +3,7 @@ Cassandra’s storage engine is **partition-based, log-structured, and immutable
 
 ---
 
-# Example table
+### Example table
 
 ```sql
 CREATE KEYSPACE empdb 
@@ -18,7 +18,7 @@ CREATE TABLE empdb.emp (
 );
 ```
 
-This means:
+Which means:
 
 * **Partition key = emp\_id**
 * Each `emp_id` → **one partition**.
