@@ -1,4 +1,3 @@
----
 
 # 📌 What is Murmur3?
 
