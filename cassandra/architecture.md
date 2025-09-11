@@ -130,7 +130,7 @@ Client → Coordinator → Replica Nodes
 
 ---
 
-# 📌 Why This Matters
+### 📌 Why This Matters
 
 * **Fast writes** → because they are append-only (Commit Log + MemTable).
 * **Reads are more complex** → because data may exist in multiple SSTables, needing merging + consistency check.
