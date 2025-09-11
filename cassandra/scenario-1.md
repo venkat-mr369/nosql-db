@@ -1,6 +1,6 @@
 **Question:-**
-suppose i have 7 nodes a emp table having 100 records like name1,name2,name3 in empdb  
-how the data will store according across all nodes, server names like casserv1,casserv2,casserv3 ?
+suppose i have 7 nodes cassandra cluster a emp table having 100 records like name1,name2,name3 in empdb database, then
+how the data will stores across all nodes, Example Server names like casserv1, casserv2, casserv3 .. casserv7
 
 **Answer**
 * the token/ring idea,
