@@ -1,0 +1,151 @@
+
+
+cqlsh> create keyspace testdb with replication = {'class':'Networktopologystrategy', 'datacenter1':'3'};
+ConfigurationException: Unable to find replication strategy class 'org.apache.cassandra.locator.Networktopologystrategy'
+
+cqlsh> desc keyspace;
+desc tables;
+desc keyspace testdb;
+
+desc table emp;
+
+CREATE KEYSPACE testdb1 WITH replication = {'class':'SimpleStrategy','replication_factor': 1};
+
+CREATE KEYSPACE mydb WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 2};
+
+DROP KEYSPACE my_keyspace;
+
+create keyspace mydb WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1};
+
+create table mydb.emp(id int primary key,name text,city text);
+
+insert into mydb.emp (id,name,city)  values(1,'venkat','bangalore');
+insert into mydb.emp (id,name,city)  values(2,'Ravi','bangalore');
+insert into mydb.emp (id,name,city)  values(3,'Kishore','Hyderabad');
+insert into mydb.emp (id,name,city)  values(4,'sriram','Chittoor');
+
+verify the table in all nodes
+nodetool getendpoints mydb emp id-value  #Primary key Column
+
+
+CREATE TABLE playlists (
+id uuid,
+song_order int,
+song_id uuid,
+title text,
+album text,
+artist text,
+PRIMARY KEY (id, song_order ) );
+
+INSERT INTO playlists (id, song_order, song_id, title, artist, album) VALUES (62c36092-82a1-3a00-93d1-46196ee77204, 4,7db1a490-5878-11e2-bcfd-0800200c9a66,'Ojo Rojo', 'Fu Manchu', 'No One Rides for Free');
+
+INSERT INTO playlists (id, song_order, song_id, title, artist, album) VALUES (62c36092-82a1-3a00-93d1-46196ee77203, 5,7db1a490-5878-11e2-bcfd-0800200c9a67,'we must obva', 'Manchu Mano', 'moving in setero');
+
+policyID,statecode,county,eq_site_limit,hu_site_limit,fl_site_limit,fr_site_limit,tiv_2011,tiv_2012,eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible,point_latitude,point_longitude,line,construction,point_granularity
+
+create table mydb.FL_insurance_sample( 
+policyID float PRIMARY KEY, 
+statecode varchar, 
+county varchar, 
+eq_site_limit float, 
+hu_site_limit float, 
+fl_site_limit float, 
+fr_site_limit float, 
+tiv_2011 float, 
+tiv_2012 float, 
+eq_site_deductible float, 
+hu_site_deductible float, 
+fl_site_deductible float, 
+fr_site_deductible float, 
+point_latitude float, 
+point_longitude float, 
+line text, 
+construction text, 
+point_granularity float);
+
+copy mydb.FL_insurance_sample(policyID,statecode,county,eq_site_limit,hu_site_limit,fl_site_limit,fr_site_limit,tiv_2011,tiv_2012,eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible,point_latitude,point_longitude,line,construction,point_granularity) from 'FL_insurance_sample.csv' with HEADER = TRUE;
+
+copy mydb.FL_insurance_sample(policyID,statecode,county,eq_site_limit,hu_site_limit,fl_site_limit,fr_site_limit,tiv_2011,tiv_2012,eq_site_deductible,hu_site_deductible,fl_site_deductible,fr_site_deductible,point_latitude,point_longitude,line,construction,point_granularity) to 'insurance_sample.csv' with HEADER = TRUE;
+
+
+nodetool flush
+nodetool status db_name
+
+suppose this node is down for a week, need to add spare node which is installed by Cassandra with the same setup.
+JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=10.128.0.2"
+
+in spare node ex:- 10.128.0.5
+conf location the file name cassandra-env.sh
+shift G come bottom paste it 
+JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=10.128.0.2"
+
+nodetool info
+nodetool enablethrift
+
+hints, if an instance is down up to 3 hours it will keep the data in hints folder
+
+/data/Cassandra/data$du -sh *
+
+for data shrink need to rebuild 
+
+nodetool rebuild datacenter1
+
+nodetool describecluster
+
+#Created 
+CREATE KEYSPACE demodb WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 2 };
+
+SELECT * FROM system_schema.columns
+WHERE keyspace_name = 'demodb' AND table_name = 'FL_insurance_sample';
+
+SHOW version;
+
+SELECT * FROM system_schema.keyspaces;
+
+SELECT * FROM system_schema.tables;
+
+SELECT count(*) FROM system_schema.tables;
+
+SELECT keyspace_name,table_name FROM system_schema.tables where keyspace_name IN('system');
+
+SELECT keyspace_name,table_name FROM system_schema.tables where keyspace_name IN('system','system_distributed','system_traces','system_auth');
+
+SELECT keyspace_name,table_name FROM system_schema.tables where keyspace_name NOT IN ('system','system_distributed','system_traces','system_auth');
+
+CREATE KEYSPACE my_keyspace WITH REPLICATION = {'class': 'NetworkTopologyStrategy', 'datacenter1': 3, 'datacenter2': 2};
+
+
+cqlsh> CREATE KEYSPACE demodb WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'datacenter1' : 3 };
+ConfigurationException: Unrecognized strategy option {datacenter1} passed to NetworkTopologyStrategy for keyspace demodb
+
+now executed below
+cqlsh>  CREATE KEYSPACE demodb WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'dc1' : 2 };
+
+cqlsh:demodb> create table emp(id int primary key,name text);
+cqlsh:demodb> insert into emp (id,name) values(1,'ram');
+cqlsh:demodb> insert into emp (id,name) values(2,'sita');
+cqlsh:demodb> insert into emp (id,name) values(3,'geeta');
+cqlsh:demodb> insert into emp (id,name) values(4,'venkat');
+cqlsh:demodb> insert into emp (id,name) values(5,'janvi');
+
+nodetool getendpoints demodb emp sita
+
+ALTER KEYSPACE demodb WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'dc1' : 3 };
+
+cqlsh:demodb> ALTER KEYSPACE demodb WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'dc1' : 3 };
+
+Warnings :
+When increasing replication factor you need to run a full (-full) repair to distribute the data.
+
+[cassandra@server1 ~]$ nodetool repair -full demodb
+[2025-02-01 09:32:57,514] Starting repair command #2 (6ba4a5e0-e051-11ef-be77-273e06446ff4), repairing keyspace demodb with repair options (parallelism: parallel, primary range: false, incremental: false, job threads: 1, ColumnFamilies: [], dataCenters: [], hosts: [], previewKind: NONE, # of ranges: 48, pull repair: false, force repair: false, optimise streams: false, ignore unreplicated keyspaces: false, repairPaxos: true, paxosOnly: false)
+[2025-02-01 09:32:58,226] Repair session 6baa4b30-e051-11ef-be77-273e06446ff4 for range [(-263246388760241422,41343379163635120], (-3605851532127615869,-3233288657105219096], (-694572313547258520,-263246388760241422], (6540628283581306184,6905476038676081478], (3331600435370364249,3856030400000268106], (-2095162117715324104,-1770328194772838059], (5880671258592601922,6272492215202947355], (-8053294136553605938,-7691566036673315369], (-7691566036673315369,-7439486607711336747], (-1770328194772838059,-1175025825812438808], (6272492215202947355,6540628283581306184], (-4957772563077811871,-4677352148467648681], (3856030400000268106,4271668059571907986], (7139091974538045010,7518773736097420260], (7883366895069570142,8173392621213449377], (4271668059571907986,4640011251198683304], (-2588000127385188853,-2095162117715324104], (9030690603425246850,-9149336036788544227], (-9149336036788544227,-8749122721363363928], (41343379163635120,451049075637419570], (4921604987884262887,5483348406243889131], (-8749122721363363928,-8496863124640294964], (702038503700547219,1120716186611236778], (-8496863124640294964,-8053294136553605938], (1870993426879561598,2364236192291828750], (2364236192291828750,2920117227208752686], (-5622281265255069946,-5317791707709101637], (8173392621213449377,8599679122494578767], (8599679122494578767,9030690603425246850], (6905476038676081478,7139091974538045010], (-2995030126792385207,-2588000127385188853], (451049075637419570,702038503700547219], (-7439486607711336747,-6961997025861393678], (2920117227208752686,3331600435370364249], (-3233288657105219096,-2995030126792385207], (-6449127721993183217,-6117620378370231921], (5483348406243889131,5880671258592601922], (7518773736097420260,7883366895069570142], (-4059371116565448603,-3605851532127615869], (-1175025825812438808,-694572313547258520], (-4677352148467648681,-4295641056775570635], (-6117620378370231921,-5622281265255069946], (1568287526509117164,1870993426879561598], (-5317791707709101637,-4957772563077811871], (-4295641056775570635,-4059371116565448603], (1120716186611236778,1568287526509117164], (-6961997025861393678,-6449127721993183217], (4640011251198683304,4921604987884262887]] finished (progress: 57%)
+[2025-02-01 09:32:58,236] Repair completed successfully
+[2025-02-01 09:32:58,249] Repair command #2 finished in 0 seconds
+[2025-02-01 09:32:58,265] condition satisfied queried for parent session status and discovered repair completed.
+[2025-02-01 09:32:58,267] Repair completed successfully
+
+
+
+
+
