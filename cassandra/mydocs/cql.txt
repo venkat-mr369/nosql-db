@@ -1,0 +1,20 @@
+cql
+
+CREATE TABLE mydb.clicks (
+ userid uuid,
+ url text,
+ date timestamp, //unrelated to WRITETIME discussed in the next section
+ name text,
+ PRIMARY KEY (userid, url)
+);
+
+
+INSERT INTO mydb.clicks (
+ userid, url, date, name)
+ VALUES (
+ 3715e600-2eb0-11e2-81c1-0800200c9a66,
+ 'http://apache.org',
+ '2013-10-09', 'Mary')
+ USING TTL 86400;
+
+SELECT TTL (name) from mydb.clicks WHERE url = 'http://apache.org' ALLOW FILTERING;

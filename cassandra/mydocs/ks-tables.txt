@@ -1,0 +1,62 @@
+-- Create Keyspace 1
+CREATE KEYSPACE IF NOT EXISTS ks1 WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+-- Create Table 1 in Keyspace 1
+CREATE TABLE IF NOT EXISTS ks1.table1 (
+    id INT PRIMARY KEY,
+    name TEXT
+);
+
+-- Insert Data into Table 1
+INSERT INTO ks1.table1 (id, name) VALUES (1, 'John Doe');
+
+-- Create Keyspace 2
+CREATE KEYSPACE IF NOT EXISTS ks2 WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+-- Create Table 2 in Keyspace 2
+CREATE TABLE IF NOT EXISTS ks2.table2 (
+    id UUID PRIMARY KEY,
+    email TEXT
+);
+
+-- Insert Data into Table 2
+INSERT INTO ks2.table2 (id, email) VALUES (uuid(), 'john.doe@example.com');
+
+-- Create Keyspace 3
+CREATE KEYSPACE IF NOT EXISTS ks3 WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+-- Create Table 1 in Keyspace 3
+CREATE TABLE IF NOT EXISTS ks3.table1 (
+    id INT PRIMARY KEY,
+    age INT
+);
+
+-- Insert Data into Table 1
+INSERT INTO ks3.table1 (id, age) VALUES (1, 30);
+
+-- Create Table 2 in Keyspace 3
+CREATE TABLE IF NOT EXISTS ks3.table2 (
+    id UUID PRIMARY KEY,
+    city TEXT
+);
+
+-- Insert Data into Table 2
+INSERT INTO ks3.table2 (id, city) VALUES (uuid(), 'New York');
+
+create table mydb.survey3(
+id UUID PRIMARY KEY,
+Year text,
+Industry_aggregation_NZSIOC text,	
+Industry_code_NZSIOC text,	
+Industry_name_NZSIOC text,	
+Units text,
+Variable_code text,
+Variable_name text,	
+Variable_category text,	
+Value text,
+Industry_code_ANZSIC06 text
+);
+
+copy mydb.survey3(id,Year,Industry_aggregation_NZSIOC,Industry_code_NZSIOC,Industry_name_NZSIOC,Units,Variable_code,Variable_name,Variable_category,Value,Industry_code_ANZSIC06) from 'annual-survey-data.csv' with HEADER = TRUE; AND DELIMITER = '|';
+
+

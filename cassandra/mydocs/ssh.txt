@@ -1,0 +1,9 @@
+Cassandra needs to start using a shell script.
+server1 192.168.17.139
+server2 192.168.17.142
+server3 192.168.17.137
+
+in server1 generate ssh-keygen 
+server1 ssh-keygen 
+ssh-copy-id  cassandra@192.168.17.142
+ssh-copy-id  cassandra@192.168.17.137

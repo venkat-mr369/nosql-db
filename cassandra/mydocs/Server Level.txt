@@ -1,0 +1,21 @@
+https://docs.datastax.com/en/cassandra-oss/3.x/cassandra/dml/dmlAboutReads.html
+
+https://cassandra.apache.org/_/blog/Learn-How-CommitLog-Works-in-Apache-Cassandra.html
+
+nodetool ring
+
+
+cat /opt/apache-cassandra-4.1.7/conf/cassandra.yaml |grep "key_cache"
+
+cat /opt/apache-cassandra-4.1.7/conf/cassandra.yaml | grep -E "seeds|rpc_address|listen_address|cluster_name"
+
+cat /opt/apache-cassandra-4.1.7/conf/cassandra.yaml | grep -E "key_cache|row_cache"
+
+endpoint_snitch: gossipingpropertyFileSnitch
+
+
+ERROR [main] 2025-02-01 08:18:42,787 CassandraDaemon.java:900 - Cannot start node if snitch's data center (dc1) differs from previous data center (datacenter1). Please fix the snitch configuration, decommission and rebootstrap this node or use the flag -Dcassandra.ignore_dc=true.
+
+in cassandra-env.sh this file
+
+JVM_OPTS="$JVM_OPTS -Dcassandra.ignore_dc=true"
