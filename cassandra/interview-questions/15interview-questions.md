@@ -2,7 +2,7 @@ Below Questions Covers **Cassandra concepts, installation, configuration, CQL, a
 
 ---
 
-# 📌 Apache Cassandra Interview Questions and Answers (Deep Dive)
+# 📌 Apache Cassandra Interview Questions and Answers 
 
 ## 1. Cassandra Basics & Architecture
 
