@@ -162,7 +162,7 @@ And for the **read path**:
 
 ---
 
-# ✅ Key Takeaways
+#### ✅ Key Takeaways
 
 * **Keyspace** defines replication policy, not actual storage.
 * **Tables (Column Families)** store rows partitioned by key → distributed across nodes.
