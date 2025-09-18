@@ -1,5 +1,4 @@
-Great — I’ve gone through all the Cassandra documents, scripts, configs, and CQL references you uploaded.
-Based on them, I’ve prepared **deep-dive interview questions with solutions**. These cover **Cassandra concepts, installation, configuration, CQL, and troubleshooting**.
+Below Questions Covers **Cassandra concepts, installation, configuration, CQL, and troubleshooting**.
 
 ---
 
