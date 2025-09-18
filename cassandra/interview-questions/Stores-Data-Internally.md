@@ -1,8 +1,7 @@
+### 🔎 Deep Dive: How Cassandra Stores Data Internally
 ---
 
-# 🔎 Deep Dive: How Cassandra Stores Data Internally
-
-## 1. **Keyspace Creation**
+### 1. **Keyspace Creation**
 
 Example:
 
@@ -21,7 +20,7 @@ WITH REPLICATION = {
 
 ---
 
-## 2. **Table Creation**
+### 2. **Table Creation**
 
 ```sql
 CREATE TABLE prod_data.emp (
@@ -38,7 +37,7 @@ CREATE TABLE prod_data.emp (
 
 ---
 
-## 3. **Write Path (Arrow Flow)**
+### 3. **Write Path (Arrow Flow)**
 
 When you insert a row:
 
@@ -72,7 +71,7 @@ On Each Replica:
 
 ---
 
-## 4. **Read Path (Arrow Flow)**
+### 4. **Read Path (Arrow Flow)**
 
 When you run:
 
@@ -107,16 +106,14 @@ Client gets final response
 
 ---
 
-## 5. **Compaction & Tombstone Cleanup**
+### 5. **Compaction & Tombstone Cleanup**
 
 * Multiple SSTables merged → fewer files.
 * Deleted rows (tombstones) permanently removed after `gc_grace_seconds`.
 
 ---
 
-# 🎯 Arrow-Based Diagram (Storage Flow)
-
-Here’s a **visual text-based arrow diagram** of Cassandra write path:
+### 🎯 Cassandra write path:
 
 ```
 [Client Write Request]
