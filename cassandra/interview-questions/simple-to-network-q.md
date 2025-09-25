@@ -1,4 +1,4 @@
-create keyspace mydb WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1}; data loaded 1M records now client asked to change dc1 3 , 
+## create keyspace mydb WITH replication = {'class': 'SimpleStrategy', 'replication_factor' : 1}; data loaded 1M records now client asked to change dc1 3 , 
 dc2 3 with networktopology is it possible? what is the comand ?
 
 You created `mydb` initially with **SimpleStrategy** (single data center).
