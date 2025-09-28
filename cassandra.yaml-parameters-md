@@ -1,0 +1,264 @@
+In interviews, they expect you to know **which parameters matter in production** and why.
+
+Here’s a **structured list** with categories, explanations, and example values.
+
+---
+
+# ⚙️ Important Cassandra Parameters for Production (`cassandra.yaml`)
+
+---
+
+## 🔹 **Cluster Identity**
+
+1. **`cluster_name`**
+
+   * Must be same across all nodes in a cluster.
+   * Example:
+
+     ```yaml
+     cluster_name: 'ProdCluster'
+     ```
+
+2. **`listen_address`**
+
+   * IP address for intra-cluster communication.
+   * Use private IP in cloud/VMs.
+   * Example:
+
+     ```yaml
+     listen_address: 10.0.0.1
+     ```
+
+3. **`rpc_address`**
+
+   * IP for client (CQL) connections.
+   * Usually `0.0.0.0` or node IP.
+   * Example:
+
+     ```yaml
+     rpc_address: 0.0.0.0
+     ```
+
+4. **`endpoint_snitch`**
+
+   * Defines data center/rack awareness for replication.
+   * Example:
+
+     ```yaml
+     endpoint_snitch: GossipingPropertyFileSnitch
+     ```
+
+---
+
+## 🔹 **Replication & Consistency**
+
+5. **`num_tokens`**
+
+   * Number of virtual nodes (vnodes) per node.
+   * Default: 16 or 256 depending on version.
+   * Example:
+
+     ```yaml
+     num_tokens: 256
+     ```
+
+6. **`partitioner`**
+
+   * Distributes data across cluster.
+   * Always use `Murmur3Partitioner` in prod.
+   * Example:
+
+     ```yaml
+     partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+     ```
+
+---
+
+## 🔹 **Performance & Compaction**
+
+7. **`memtable_flush_writers`**
+
+   * Number of flush threads.
+   * Tune to number of disks.
+   * Example:
+
+     ```yaml
+     memtable_flush_writers: 4
+     ```
+
+8. **`concurrent_reads` / `concurrent_writes`**
+
+   * Threads for read/write ops.
+   * Rule: set to `2 × cores`.
+   * Example:
+
+     ```yaml
+     concurrent_reads: 64
+     concurrent_writes: 64
+     ```
+
+9. **`concurrent_compactors`**
+
+   * Parallel compaction threads.
+   * Rule: usually = number of disks.
+   * Example:
+
+     ```yaml
+     concurrent_compactors: 2
+     ```
+
+10. **`compaction_throughput_mb_per_sec`**
+
+    * Limits compaction speed.
+    * Example:
+
+      ```yaml
+      compaction_throughput_mb_per_sec: 128
+      ```
+
+---
+
+## 🔹 **Caching**
+
+11. **`key_cache_size_in_mb`**
+
+    * Cache for partition keys.
+    * Default: auto (5% of heap).
+    * Example:
+
+      ```yaml
+      key_cache_size_in_mb: 512
+      ```
+
+12. **`row_cache_size_in_mb`**
+
+    * Disabled in most prod (not memory efficient).
+    * Example:
+
+      ```yaml
+      row_cache_size_in_mb: 0
+      ```
+
+---
+
+## 🔹 **GC & Hints**
+
+13. **`hinted_handoff_enabled`**
+
+    * Enable hints to recover missed writes.
+    * Example:
+
+      ```yaml
+      hinted_handoff_enabled: true
+      ```
+
+14. **`max_hint_window_in_ms`**
+
+    * Time to keep hints if a node is down.
+    * Default: 3 hours, prod often set to 12–24h.
+    * Example:
+
+      ```yaml
+      max_hint_window_in_ms: 10800000
+      ```
+
+---
+
+## 🔹 **Storage**
+
+15. **`data_file_directories`**
+
+    * Where SSTables are stored.
+    * Example:
+
+      ```yaml
+      data_file_directories:
+        - /var/lib/cassandra/data
+      ```
+
+16. **`commitlog_directory`**
+
+    * Separate disk recommended.
+    * Example:
+
+      ```yaml
+      commitlog_directory: /var/lib/cassandra/commitlog
+      ```
+
+17. **`saved_caches_directory`**
+
+    * For cache persistence.
+    * Example:
+
+      ```yaml
+      saved_caches_directory: /var/lib/cassandra/saved_caches
+      ```
+
+---
+
+## 🔹 **JVM / GC Tuning (`jvm.options`)**
+
+18. **Heap size**
+
+* Rule: 1/2 of system RAM, but max ~8–16GB.
+* Example:
+
+  ```
+  -Xms8G
+  -Xmx8G
+  ```
+
+19. **GC**
+
+* Use G1GC for large heaps.
+* Example:
+
+  ```
+  -XX:+UseG1GC
+  ```
+
+---
+
+# 🧾 Example Production Config Snippet
+
+```yaml
+cluster_name: 'ProdCluster'
+num_tokens: 256
+partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+listen_address: 10.0.0.1
+rpc_address: 0.0.0.0
+endpoint_snitch: GossipingPropertyFileSnitch
+
+concurrent_reads: 64
+concurrent_writes: 64
+concurrent_compactors: 2
+compaction_throughput_mb_per_sec: 128
+
+memtable_flush_writers: 4
+hinted_handoff_enabled: true
+max_hint_window_in_ms: 86400000
+
+key_cache_size_in_mb: 512
+row_cache_size_in_mb: 0
+
+data_file_directories:
+  - /var/lib/cassandra/data
+commitlog_directory: /var/lib/cassandra/commitlog
+saved_caches_directory: /var/lib/cassandra/saved_caches
+```
+
+---
+
+# 🧠 Interview-Ready Short Answer
+
+> “In production Cassandra, the most important parameters in `cassandra.yaml` are:
+>
+> * **Cluster Identity:** `cluster_name`, `listen_address`, `rpc_address`, `endpoint_snitch`.
+> * **Performance:** `concurrent_reads`, `concurrent_writes`, `concurrent_compactors`, `compaction_throughput_mb_per_sec`.
+> * **Storage:** `data_file_directories`, `commitlog_directory`.
+> * **Replication:** `num_tokens`, `partitioner`.
+> * **Caching:** `key_cache_size_in_mb`, `row_cache_size_in_mb`.
+> * **Recovery:** `hinted_handoff_enabled`, `max_hint_window_in_ms`.
+>   Along with JVM tuning (`Xmx`, `Xms`, G1GC). These ensure consistent performance, replication safety, and recovery in production.”
+
+---
