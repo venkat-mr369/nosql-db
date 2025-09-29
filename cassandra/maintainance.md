@@ -1,15 +1,15 @@
-Nice — here’s the **same runbook** rewritten in *easy English* with a clear **use case** for your situation: **100 big tables, each \~100 GB**, and each table contains three logical parts you called `tbl1`, `tbl2`, `tbl3`. I’ll give simple steps you can follow by hand (no scripts), a safe schedule that finishes all 100 tables in about a week, and the exact commands to run.
+i have **100 big tables, each \~100 GB**, and each table contains three logical parts you called `tbl1`, `tbl2`, `tbl3`. I have to finesh, a safe schedule that finishes all 100 tables in about a week, and the exact commands to run.
 
 ---
 
-# Quick plain-English summary
+# Quick summary
 
 You have many large tables and too many *tombstones* (deleted markers). Tombstones slow reads and use CPU/IO.
 Do many **small, targeted** compactions (UDC style) on a few tables at a time, on a schedule that spreads load across the 15 nodes. Don’t do big “major” compactions on many nodes at once — that will cause CPU and IO spikes.
 
 ---
 
-# Assumptions (what I’m using to build the plan)
+# Estimation
 
 * 15-node Cassandra cluster.
 * 100 tables total. Each table is \~100 GB and contains three sub-areas (you called them `tbl1`, `tbl2`, `tbl3`).
@@ -44,9 +44,9 @@ Example daily plan:
 
 ---
 
-# Step-by-step runbook — Easy English, do this by hand
+### Step-by-step runbook
 
-## 1) Preflight checks (before touching a node)
+#### 1) Preflight checks (before touching a node)
 
 SSH into the node:
 
@@ -102,7 +102,7 @@ free -m
 
 ---
 
-## 2) Pick tables to compact (per node)
+#### 2) Pick tables to compact (per node)
 
 * Choose **1 table per node** for each window. Start with the tables that:
 
@@ -112,7 +112,7 @@ free -m
 
 ---
 
-## 3) Prepare the table (flush memtables)
+#### 3) Prepare the table (flush memtables)
 
 Before compacting, flush the table so SSTable files are stable:
 
@@ -124,9 +124,9 @@ Why? Flushing writes in-memory data to disk so the list of SSTables won’t chan
 
 ---
 
-## 4) Run compaction (choose one method)
+#### 4) Run compaction (choose one method)
 
-### A — Table-level (simple, safe)
+#### A — Table-level (simple, safe)
 
 Run one table at a time:
 
@@ -136,7 +136,7 @@ nodetool compact <KEYSPACE> <TABLE>
 
 This compacts SSTables for that table on that single node. Monitor while it runs.
 
-### B — User-Defined SSTable compaction (surgical — preferred for heavy tables)
+#### B — User-Defined SSTable compaction (surgical — preferred for heavy tables)
 
 If a table is very big, prefer to compact only certain SSTable files (old ones with tombstones). This uses JMX `CompactionManager.forceUserDefinedCompaction(...)`. Steps (manual):
 
@@ -150,11 +150,11 @@ ls -ltr /var/lib/cassandra/data/<KEYSPACE>/<TABLE>-*/  # look for old ma-*.db fi
 
 > NOTE: JMX method is safest and lowest-blast, but needs testing and JMX access.
 
-### Avoid: Major compaction (merging everything). It is heavy and should be used only in special maintenance windows.
+#### Avoid: Major compaction (merging everything). It is heavy and should be used only in special maintenance windows.
 
 ---
 
-## 5) Monitor while compaction runs
+#### 5) Monitor while compaction runs
 
 Keep checking:
 
@@ -170,7 +170,7 @@ If CPU or IO goes too high or pending compactions grow, stop scheduling more win
 
 ---
 
-## 6) After compaction — quick checks
+#### 6) After compaction — quick checks
 
 * Check table stats:
 
@@ -252,7 +252,7 @@ If you must finish faster, increase compactions per node per window — but firs
 
 ---
 
-# One-page operator checklist (print this and use)
+### Production operator checklist 
 
 1. Identify node group and tables for this window.
 2. SSH to node: `ssh cassandra@<node>`
@@ -268,7 +268,7 @@ If you must finish faster, increase compactions per node per window — but firs
 
 ---
 
-# Final tips (short)
+### Final tips (short)
 
 * Start conservative: 1 table per node per window.
 * Prioritize TTL/time-series and high-delete tables first.
@@ -278,9 +278,3 @@ If you must finish faster, increase compactions per node per window — but firs
 
 ---
 
-If you want, I can now:
-
-* give a **7-day table-to-node schedule** with the 100 table names filled in (I’ll assign them to windows), or
-* create a **one-page PDF checklist** you can print.
-
-Tell me which and I’ll prepare it.
