@@ -1,4 +1,4 @@
-Helpful — I’ll give you an actionable, copy-pasteable, step-by-step cluster setup for **Apache Cassandra 5.0.1** for your **3 regions (us, west, europe)** with **5 nodes each (total 15)** named `amscluster`, using the IP ranges you gave:
+**Apache Cassandra 5.0.1** for your **3 regions (us, west, europe)** with **5 nodes each (total 15)** named `amscluster`, using the IP ranges you gave:
 
 * `us` = `10.10.166.1` → `10.10.166.5`
 * `west` = `10.10.144.1` → `10.10.144.5`
