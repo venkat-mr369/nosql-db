@@ -2,7 +2,7 @@
 
 ---
 
-# 🔎 What is a Tombstone in Cassandra?
+## 🔎 What is a Tombstone in Cassandra?
 
 A **tombstone** in Cassandra is a **marker** that indicates a piece of data (row, column, or partition) has been **deleted or expired (via TTL)**.
 
@@ -10,7 +10,7 @@ A **tombstone** in Cassandra is a **marker** that indicates a piece of data (row
 
 ---
 
-## 🛠 How Tombstones Work
+### 🛠 How Tombstones Work
 
 1. **Delete/TTL applied:**
 
