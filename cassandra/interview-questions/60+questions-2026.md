@@ -1,4 +1,4 @@
-Here's your comprehensive Apache Cassandra DBA Interview Guide. The document covers **8 sections** with 60+ questions, a 24-node capacity planning reference table, and practical solutions:
+comprehensive Apache Cassandra DBA Interview Guide. The document covers **8 sections** with 60+ questions, a 24-node capacity planning reference table, and practical solutions:
 
 1. **Architecture & Fundamentals** – Ring architecture, write/read paths, gossip protocol, partitioners, vnodes for 24-node clusters
 2. **Replication & Consistency** – RF strategies, all consistency levels, tunable consistency (R+W>N formula), hinted handoff, read repair, anti-entropy repair, LOCAL_QUORUM walkthrough for 24-node/2-DC setup
